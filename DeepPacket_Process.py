@@ -1,6 +1,5 @@
 from scapy.all import *
 import binascii
-import numpy as np
 import csv
 
 # Returns the packet at the IP header, removing everything above/prior to it
