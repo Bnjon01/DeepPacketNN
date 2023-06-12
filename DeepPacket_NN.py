@@ -10,6 +10,8 @@ from sklearn.metrics import classification_report
 # Data file input, comment/uncomment the given csv file or replace the name
 #data = pd.read_csv("TrafficData.csv", header=None, delimiter=',', skiprows=2)
 data = pd.read_csv("ApplicationData.csv", header=None, delimiter=',', skiprows=2)
+# Amount of categories in preprocessed data
+# Provided sample data settings: 10 for TrafficData.csv and 14 for ApplicationData.csv
 CATEGORY_NUM = 0
 
 # Split data into X and Y, cutting off column 1501 for Y
