@@ -10,12 +10,13 @@ from sklearn.metrics import classification_report
 # Data file input, comment/uncomment the given csv file or replace the name
 #data = pd.read_csv("TrafficData.csv", header=None, delimiter=',', skiprows=2)
 data = pd.read_csv("ApplicationData.csv", header=None, delimiter=',', skiprows=2)
+CATEGORY_NUM = 0
 
 # Split data into X and Y, cutting off column 1501 for Y
 X_data = data.iloc[:,:1500]
 y_data = data.iloc[:,1500:]
 # Encode Y into an array, 10 for traffic classification, 14 for application classification
-y_data = np_utils.to_categorical(y_data, 14)
+y_data = np_utils.to_categorical(y_data, CATEGORY_NUM)
 
 # 64% training data, 20% test data, 16% validation data
 X_train, X_test, y_train, y_test = train_test_split(X_data, y_data, test_size = 0.2)
@@ -33,7 +34,7 @@ SAE.add(Dense(100, activation="relu"))
 SAE.add(Dropout(0.05))
 SAE.add(Dense(50, activation="relu"))
 SAE.add(Dropout(0.05))
-SAE.add(Dense(14, activation="softmax"))
+SAE.add(Dense(CATEGORY_NUM, activation="softmax"))
 # Training with MSE loss function
 SAE.compile(loss="mean_squared_error", optimizer="adam")
 SAE.fit(X_train, y_train, epochs=200, verbose=1)
@@ -42,7 +43,7 @@ SAE.compile(loss="categorical_crossentropy", optimizer="adam", metrics=[metrics.
 SAE.fit(X_train, y_train, epochs=200, verbose=1)
 
 y_pred = np.argmax(SAE.predict(X_test), axis=-1)
-y_pred = np_utils.to_categorical(y_pred, 14)
+y_pred = np_utils.to_categorical(y_pred, CATEGORY_NUM)
 print(classification_report(y_test, y_pred))
 
 #CNN
@@ -63,12 +64,12 @@ CNN.add(Dense(200, activation="relu"))
 CNN.add(Dropout(0.05))
 CNN.add(Dense(200, activation="relu"))
 CNN.add(Dropout(0.05))
-CNN.add(Dense(14, activation="softmax"))
+CNN.add(Dense(CATEGORY_NUM, activation="softmax"))
 CNN.compile(loss="categorical_crossentropy", optimizer="adam", metrics=[metrics.Precision(), metrics.Recall()])
 CNN.fit(X_train, y_train, epochs=300, verbose=1)
 
 y_pred = np.argmax(CNN.predict(X_test), axis=-1)
-y_pred = np_utils.to_categorical(y_pred, 14)
+y_pred = np_utils.to_categorical(y_pred, CATEGORY_NUM)
 print(classification_report(y_test, y_pred))
 
 
