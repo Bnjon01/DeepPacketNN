@@ -2,6 +2,13 @@ from scapy.all import *
 import binascii
 import csv
 
+# input pcap or pcapng file location
+FILENAME = "filename.pcap"
+# Output name of the processed file ending in .csv
+OUTPUT_NAME = "filename.csv"
+# The number of category of file to be appended to the final column
+CATEGORY_NUM = 0
+
 # Returns the packet at the IP header, removing everything above/prior to it
 def data_link_removal(packet):
 	return packet[IP]
@@ -39,14 +46,8 @@ def ip_masking(array):
 	return array
 
 if __name__ == "__main__":
-	# input pcap or pcapng file location
-	filename = "filename.pcap"
-	# Output name of the processed file ending in .csv
-	output_filename = "filename.csv"
-	# The number of category of file to be appended to the final column
-	category_num = 0
-	pcap = rdpcap(filename)
-	with open(output_filename, 'w') as csvfile:
+	pcap = rdpcap(FILENAME)
+	with open(OUTPUT_NAME, 'w') as csvfile:
 		csvwriter = csv.writer(csvfile)
 		for packet in pcap:
 			# Skips the loop if DNS, ARP, or other non-IP packet is found
@@ -62,5 +63,5 @@ if __name__ == "__main__":
 			output = normalisation(output)
 			output = truncation(output)
 			output = ip_masking(output)
-			output.append(category_num)
+			output.append(CATEGORY_NUM)
 			csvwriter.writerow(output)
